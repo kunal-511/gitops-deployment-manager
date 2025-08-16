@@ -9,11 +9,17 @@ func NewRouter() *gin.Engine {
 
 	api := r.Group("/api")
 	{
+		// Cluster routes
 		api.POST("/clusters", CreateCluster)
 		api.GET("/clusters", ListClusters)
 		api.GET("/clusters/:id", GetCluster)
 		api.POST("/clusters/:id/test", TestCluster)
-		// repos, sync, webhooks will be added next
+
+		// Repository routes
+		api.POST("/repos", CreateRepo)
+		api.GET("/repos", ListRepos)
+		api.GET("/repos/:id", GetRepo)
+
 	}
 
 	return r

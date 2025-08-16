@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -75,4 +76,18 @@ func Fingerprint(kubeconfig []byte) string { // just a short hash for logging
 	}
 	sum := sha1.Sum(kubeconfig)
 	return hex.EncodeToString(sum[:])[:10]
+}
+
+func NewClientFromKubeconfig(kubeconfig []byte) (*kubernetes.Clientset, error) {
+	decoded, err := decodeKubeconfig(kubeconfig)
+	config, err := clientcmd.RESTConfigFromKubeConfig(decoded)
+	if err != nil {
+		return nil, err
+	}
+	return kubernetes.NewForConfig(config)
+}
+func ApplyManifest(clientset *kubernetes.Clientset, manifestPath string) error {
+	// For now, we’ll just print — later integrate `sigs.k8s.io/controller-runtime/pkg/client`
+	fmt.Println("Would apply manifest:", manifestPath)
+	return nil
 }
